@@ -106,7 +106,7 @@ const mouseleave1 = function(event, d) {
 
 */
 
-// TODO: generating each bar of the plot from the given data and 
+// generating each bar of the plot from the given data and 
 // adding style modifications
 svg1.selectAll(".bar") 
    .data(data1) 
@@ -120,6 +120,67 @@ svg1.selectAll(".bar")
      .on("mouseover", mouseover1) 
      .on("mousemove", mousemove1)
      .on("mouseleave", mouseleave1);
+
+
+// CSV Bar
+
+
+// Creates the svg where the plot will live and applies margins
+const svg2 = d3
+  .select("#csv-bar")
+  .append("svg")
+  .attr("width", width-margin.left-margin.right)
+  .attr("height", height - margin.top - margin.bottom)
+  .attr("viewBox", [0, 0, width, height]);
+
+
+d3.csv("data/barchart.csv").then((data) => {
+
+  console.log(data);
+
+  svg2.selectAll(".bar") 
+   .data(data) 
+   .enter()  
+   .append("rect") 
+     .attr("class", "bar") 
+     .attr("x", (d,i) => xScale1(i)) 
+     .attr("y", (d) => yScale1(d.score)) 
+     .attr("height", (d) => (height - margin.bottom) - yScale1(d.score)) 
+     .attr("width", xScale1.bandwidth()) 
+     .on("mouseover", mouseover1) 
+     .on("mousemove", mousemove1)
+     .on("mouseleave", mouseleave1);
+
+     // finding the maximum y value
+    let maxY2 = d3.max(data, function(d) { return d.score; });
+
+    // TODO: setting the span of y values and where they will be plotted on the page
+    let yScale2 = d3.scaleLinear()
+                .domain([0,maxY2])
+                .range([height- margin.bottom,margin.top]); 
+
+    // TODO: setting the span of x values, where they will be plotted on the page and
+    // leaving spacing around the edge of the plot
+    let xScale2 = d3.scaleBand()
+                .domain(d3.range(data.length))
+                .range([margin.left, width - margin.right])
+                .padding(0.1); 
+
+    // adding the y values to the plot
+    svg2.append("g")
+        .attr("transform", `translate(${margin.left}, 0)`) 
+        .call(d3.axisLeft(yScale2)) 
+        .attr("font-size", '20px'); 
+
+    // adding the x values to the plot
+    svg2.append("g")
+        .attr("transform", `translate(0,${height - margin.bottom})`) 
+        .call(d3.axisBottom(xScale2) 
+                .tickFormat(i => data[i].name))  
+        .attr("font-size", '20px'); 
+
+
+});
 
 
 
