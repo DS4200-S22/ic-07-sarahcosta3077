@@ -16,7 +16,7 @@ const margin = {left:50, right:50, bottom:50, top:50};
 const yTooltipOffset = 15; 
 
 
-// TODO: What does this code do? 
+// Creates the svg where the plot will live and applies margins
 const svg1 = d3
   .select("#hard-coded-bar")
   .append("svg")
@@ -41,27 +41,28 @@ const data1 = [
 
 */ 
 
-// TODO: What does this code do? 
+// finding the maximum y value
 let maxY1 = d3.max(data1, function(d) { return d.score; });
 
-// TODO: What does each line of this code do?   
+// TODO: setting the span of y values and where they will be plotted on the page
 let yScale1 = d3.scaleLinear()
             .domain([0,maxY1])
             .range([height-margin.bottom,margin.top]); 
 
-// TODO: What does each line of this code do? 
+// TODO: setting the span of x values, where they will be plotted on the page and
+// leaving spacing around the edge of the plot
 let xScale1 = d3.scaleBand()
             .domain(d3.range(data1.length))
             .range([margin.left, width - margin.right])
             .padding(0.1); 
 
-// TODO: What does each line of this code do?  
+// adding the y values to the plot
 svg1.append("g")
    .attr("transform", `translate(${margin.left}, 0)`) 
    .call(d3.axisLeft(yScale1)) 
    .attr("font-size", '20px'); 
 
-// TODO: What does each line of this code do? 
+// adding the x values to the plot
 svg1.append("g")
     .attr("transform", `translate(0,${height - margin.bottom})`) 
     .call(d3.axisBottom(xScale1) 
@@ -74,26 +75,27 @@ svg1.append("g")
 
 */
 
-// TODO: What does each line of this code do? 
+// setting what we want the style to change to when the tooltip is used
 const tooltip1 = d3.select("#hard-coded-bar") 
                 .append("div") 
                 .attr('id', "tooltip1") 
                 .style("opacity", 0) 
                 .attr("class", "tooltip"); 
 
-// TODO: What does each line of this code do?  
+// creating an event for using the tooltip when the plot is mousedover
+// object appears
 const mouseover1 = function(event, d) {
   tooltip1.html("Name: " + d.name + "<br> Score: " + d.score + "<br>") 
           .style("opacity", 1);  
 }
 
-// TODO: What does each line of this code do? 
+// creating an event that sets tooltip position when the mouse moves
 const mousemove1 = function(event, d) {
-  tooltip1.style("left", (event.x)+"px") 
-          .style("top", (event.y + yTooltipOffset) +"px"); 
+  tooltip1.style("left", (event.pageX)+"px") 
+          .style("top", (event.pageY + yTooltipOffset) +"px"); 
 }
 
-// TODO: What does this code do? 
+// making the object disappear when the mouse leaves
 const mouseleave1 = function(event, d) { 
   tooltip1.style("opacity", 0); 
 }
@@ -104,7 +106,8 @@ const mouseleave1 = function(event, d) {
 
 */
 
-// TODO: What does each line of this code do? 
+// TODO: generating each bar of the plot from the given data and 
+// adding style modifications
 svg1.selectAll(".bar") 
    .data(data1) 
    .enter()  
